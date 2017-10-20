@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>		
+	<title>登录界面</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+    <script src="js/jquery-2.2.2.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+    	.my-page { background: transparent url(img/bg.jpg) 0 0 no-repeat; }
+    	.qq{
+    		text-align: center;
+    	}
+    	a{
+    		text-decoration: none;
+    	}
+    	#regis{
+    		float:right;
+    	}
+    	
+    	#errorTip1{
+    		color:#22AADD;
+    	}
+    	#errorTip2{
+    		color:#22AADD;
+    	}
+    	#errorTip3{
+    		color:#22AADD;
+    	}
+    	#tips{
+    		color:red;
+    	}
+    </style>
+</head>
+<body>
+	 <div data-role="page" class="my-page">
+	 	<div data-role="content">
+	 		<div class="qq"><img src="img/qq.png" alt="" style="width:250px;height:200px"></div>
+	 		<form method="post" action="demoform.asp">	 	  	
+              <label for="flogin" class="ui-hidden-accessible">账号: </label>
+              <input type="text" name="flogin" id="flogin" placeholder="账号:" onblur="checkUsername( )"><span id="errorTip1"></span>
+              <label for="fpw" class="ui-hidden-accessible">密码: </label>
+              <input type="password" name="fpw" id="fpw" placeholder="密码:" onblur="checkPassword( )"><span id="errorTip2"></span>
+              <span id="tips"></span>
+              <input type="submit" data-inline="false" value="登录" id="login">
+              <a href="#" id="find">忘记密码？</a>
+              <a href="register.html" id="regis">新用户注册</a>
+                
+           </form>
+        </div>
+	</div>
+	
+</body>
+<script type="text/javascript">
+  
+    //为“账号””密码“”确认密码“添加验证函数，当失去焦点时调用函数
+	 var flogin=document.getElementById("flogin");
+	 var fpw=document.getElementById("fpw");
+	 
+//表单验证
+function checkUsername( ){ //检验用户名
+	var flogin=document.getElementById("flogin");
+	if (flogin.value.length==0) {
+		document.getElementById("errorTip1").innerHTML="账号必须输入";
+	}
+	else if(flogin.value.length>0&&flogin.value.length<=11)
+	{
+		 document.getElementById("errorTip1").innerHTML="账号格式正确";
+	}
+	else
+     {
+		 document.getElementById("errorTip1").innerHTML="账号必须不能大于11位";
+		}
+}
+
+function checkPassword( ) { //检验密码
+	if (fpw.value.length==0) {
+		document.getElementById("errorTip2").innerHTML="密码必须输入";
+	}
+	else if (fpw.value.length>0&&fpw.value.length<6) 
+	{	
+		 document.getElementById("errorTip2").innerHTML="密码格式不正确";
+     }
+	else{
+		 document.getElementById("errorTip2").innerHTML="密码格式正确";
+	}
+}
+
+
+
+$('#login').click(function(){
+		 $.ajax({
+		 	type:'get',
+		 	url:' http://datainfo.duapp.com/shopdata/userinfo.php',
+		 	data:{status:'login',userID:flogin.value,password:fpw.value},
+		 	dataType:'json',
+		 	success:function(data){
+		 		console.log(data);
+						switch(data){
+							case 0:
+						   		tips.innerHTML = "用户名不存在";
+						   		break;
+							case 2:
+						   		tips.innerHTML ="账号与密码不符";
+						   		break;
+							default:
+						    	tips.innerHTML ="登录成功！";
+						   		window.location="index.html";
+						    	break;
+						}
+         		 }
+	     })
+})
+
+ var regis=document.getElementById('regis');
+    regis.onclick=function(){
+      window.location="register.html";
+    }
+    
+
+    
+</script>
+
+</html>

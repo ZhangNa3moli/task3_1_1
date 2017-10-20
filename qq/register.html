@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+    <script src="js/jquery-2.2.2.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+    	.my-page { background: transparent url(img/bg.jpg) 0 0 no-repeat; }
+    	.qq{
+    		text-align: center;
+    	}
+    	#errorTip1{    		
+    		color:#22AADD;
+    	}
+    	#errorTip2{
+    		color:#22AADD;
+    	}
+    	#errorTip3{
+    		color:#22AADD;
+    	}
+    	#tips{
+    		color:red;
+    	}
+    </style>
+</head>
+<body>
+	 <div data-role="page" class="my-page">
+	 	<div data-role="content">
+	 	<div class="qq"><img src="img/qq.png" alt="" style="width:200px;height:150px"></div>
+	 		<form method="post" action="demoform.asp">	 	  	
+              <label for="fregis" class="ui-hidden-accessible">用户名: </label>
+              <input type="text" name="fregis" id="fregis" placeholder="输入用户名:" onblur="checkUsername( )"><span id="errorTip1"></span>
+              <label for="fpw1" class="ui-hidden-accessible">密码: </label>
+              <input type="password" name="fpw1" id="fpw1" placeholder="输入密码:" onblur="checkPassword( )"><span id="errorTip2"></span>
+              <label for="fpw2" class="ui-hidden-accessible">密码: </label>
+              <input type="password" name="fpw2" id="fpw2" placeholder="确认密码:"  onblur="checkRepw( )"><span id="errorTip3"></span>
+              <input type="submit" data-inline="false" value="注册" id="register">
+              <span id="tips"></span>
+           </form>
+        </div>
+	</div>
+	
+	
+</body>
+<script type="text/javascript">
+  
+	//为“用户名””密码“”确认密码“添加验证函数，当失去焦点时调用函数
+	 var fregis=document.getElementById("fregis");
+	 var fpw1=document.getElementById("fpw1");
+	  var fpw2=document.getElementById("fpw2");
+	 
+//表单验证
+function checkUsername( ){ //检验用户名
+	var fregis=document.getElementById("fregis");
+	if (fregis.value.length==0) {
+		document.getElementById("errorTip1").innerHTML="用户名必须输入";
+	}
+	else if(fregis.value.length>0&&fregis.value.length<=11)
+	{
+		 document.getElementById("errorTip1").innerHTML="用户名格式正确";
+	}
+	else
+     {
+		 document.getElementById("errorTip1").innerHTML="用户名必须不能大于11位";
+		}
+}
+
+function checkPassword( ) { //检验密码
+	if (fpw1.value.length==0) {
+		document.getElementById("errorTip2").innerHTML="密码必须输入";
+	}
+	else if (fpw1.value.length>0&&fpw1.value.length<6) 
+	{	
+		 document.getElementById("errorTip2").innerHTML="密码格式不正确";
+     }
+	else{
+		 document.getElementById("errorTip2").innerHTML="密码格式正确";
+	}
+}
+
+function checkRepw( ) { //确认密码
+	if (fpw2.value.length==0) {
+		document.getElementById("errorTip3").innerHTML="确认密码必须输入";
+	}
+	else if (fpw2.value!=fpw1.value){	
+		 document.getElementById("errorTip3").innerHTML="密码不一致";
+     }
+	else{
+		 document.getElementById("errorTip3").innerHTML="确认密码成功";
+	}
+}
+
+
+
+
+//type:请求方式（get,post）
+	//url:接口地址
+	//data:传入的参数
+	//dataType:返回的数据类型，一般的值为--json/jsonp  
+	//success:成功后的回调函数
+	
+	 $('#register').click(function(){
+		 $.ajax({
+		 	type:'get',
+		 	url:'http://datainfo.duapp.com/shopdata/userinfo.php',
+		 	data:{status:'register',userID:fregis.value,password:fpw1.value},
+		 	dataType:'json',
+		 	success:function(data){
+		 		console.log(data);
+						switch(data){
+							case 0:
+						   		tips.innerHTML = "用户名已存在";
+						   		break;
+							case 1:
+						   		tips.innerHTML ="注册成功！";
+						   		window.location="login.html";
+						   		break;
+							case 2:
+						   		tips.innerHTML ="数据库报错";
+						   		break;
+							default:
+						    	alert('error!');
+						    	break;
+						}
+         		 }
+	     })
+})
+</script>
+</html>
